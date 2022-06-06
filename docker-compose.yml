@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  nats-streaming:
+    container_name: nats-streaming
+    image: nats-streaming:latest
+    ports:
+      - "8222:8222"
+      - "4222:4222"
+      - "6222:6222"
+    restart: always
+    command:
+      [
+        '-p',
+        '4222',
+        '-m',
+        '8222',
+        '-hbi',
+        '5s',
+        '-hbt',
+        '5s',
+        '-hbf',
+        '2',
+        '-SD',
+        '-cid',
+        'microservice'
+      ]
+
+  pgdb:
+    container_name: pgdb
+    image: postgres:14.2-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=pwd123
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.pgdata:/var/lib/postgresql/data
+
+
+
+

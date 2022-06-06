@@ -1,0 +1,14 @@
+version: '3.9'
+
+listen:
+  host: "127.0.0.1"
+  port: 8000
+
+pg_db:
+  host: "127.0.0.1"
+  port: 5432
+  username: admin
+  password: pwd123
+  database: orders
+  timeout: 10
+  max_conns: 5
