@@ -44,7 +44,5 @@ func (o *OrderHandler) OrdersPage(w http.ResponseWriter, r *http.Request) {
 	orders := o.storage.LoadAll()
 
 	o.pageCache["orders"] = orders
-	o.pageCache["title"] = "This is title!"
-
 	ordersTpl.Execute(w, o.pageCache)
 }

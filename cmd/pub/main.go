@@ -24,18 +24,32 @@ func init() {
 }
 
 func main() {
+	rand.Seed(time.Now().Unix()) // initialize global pseudo random generator
+
 	sc, _ := stan.Connect(clusterId, clientId)
 
+	ticker := time.NewTicker(3 * time.Second)
+	errorFormatTicker := time.NewTicker(5 * time.Second)
+
+	errorFormates := []string{"{}", "asdads", "{Price: 200}"}
+
 	for {
-		data, _ := json.Marshal(GenerateFakeOrder())
-		sc.Publish("pub-1", data)
-		time.Sleep(3 * time.Second)
+		select {
+		case <-ticker.C:
+			data, _ := json.Marshal(GenerateFakeOrder())
+
+			sc.Publish("pub-1", data)
+			time.Sleep(3 * time.Second)
+		case <-errorFormatTicker.C:
+			data := []byte(errorFormates[rand.Intn(3)])
+			sc.Publish("pub-1", data)
+		}
 	}
 }
 
 func GenerateFakeOrder() *order.Order {
-	trackNumber := fake.Address().Address()
-	n := rand.Intn(100) + 1
+	trackNumber := fake.Gamer().Tag()
+	n := rand.Intn(10) + 1
 	itms := make([]order.Item, n)
 	for i := 0; i < n; i++ {
 		itms[i] = order.Item{

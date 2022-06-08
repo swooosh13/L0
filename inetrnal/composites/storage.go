@@ -4,15 +4,16 @@ import "github.com/swooosh13/L0/inetrnal/repository/order"
 
 type Storage struct {
 	Cache *order.CacheRepository
-	Repo  *PostgresDBComposite
+	Repo  *order.DbRepository
 }
 
 func NewStorage(pgComposite *PostgresDBComposite) *Storage {
 	c := order.NewCache()
-	c.Recover(order.NewDbRepository(pgComposite.Client))
+	d := order.NewDbRepository(pgComposite.Client)
+	c.Recover(d)
 
 	return &Storage{
 		Cache: c,
-		Repo: pgComposite,
+		Repo:  d,
 	}
 }
