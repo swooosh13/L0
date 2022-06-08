@@ -78,7 +78,7 @@ func TestValidModel(t *testing.T) {
 	})
 
 	t.Run("Check payment signature", func(t *testing.T) {
-		req.Equal(1637907727,o.Payment.PaymentDt)
+		req.Equal(1637907727, o.Payment.PaymentDt)
 	})
 
 	t.Run("Correct validate", func(t *testing.T) {

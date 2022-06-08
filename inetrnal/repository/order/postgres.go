@@ -2,7 +2,6 @@ package order
 
 import (
 	"context"
-	"fmt"
 	"github.com/swooosh13/L0/inetrnal/models/order"
 	"github.com/swooosh13/L0/pkg/pgdb"
 )
@@ -37,9 +36,8 @@ func (r *DbRepository) LoadAll() []order.Order {
 	`
 
 	orders := make([]order.Order, 0)
-	rows, err := r.client.Query(context.Background(),q)
+	rows, err := r.client.Query(context.Background(), q)
 	if err != nil {
-		fmt.Println("error 2")
 		return orders
 	}
 
@@ -47,7 +45,6 @@ func (r *DbRepository) LoadAll() []order.Order {
 		var o order.Order
 		err = rows.Scan(&o)
 		if err != nil {
-			fmt.Println("error parsing")
 			return orders
 		}
 
@@ -67,6 +64,3 @@ func (r *DbRepository) Store(o order.Order) {
 		return
 	}
 }
-
-
-
