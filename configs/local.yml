@@ -2,7 +2,7 @@ version: '3.9'
 
 listen:
   host: "127.0.0.1"
-  port: 8000
+  port: 8080
 
 pg_db:
   host: "127.0.0.1"
@@ -12,3 +12,7 @@ pg_db:
   database: orders
   timeout: 10
   max_conns: 5
+
+stan:
+  client_id: "sub-1"
+  cluster_id: "microservice"

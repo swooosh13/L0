@@ -12,11 +12,6 @@ import (
 	"github.com/nats-io/stan.go"
 )
 
-const (
-	clusterId = "microservice"
-	clientId  = "sub-1"
-)
-
 func main() {
 	cfg, _ := config.GetConfig()
 	log.Println("load config")
@@ -28,31 +23,22 @@ func main() {
 	}
 	log.Println("pg connected - ok")
 
-	storage := composites.NewStorage(pgComposite)
-	log.Println("storage has been created")
-	os := storage.Cache.LoadAll()
-	fmt.Println(len(os))
-	// TODO
-	// stan
-	sc, _ := stan.Connect(clusterId, clientId)
+	orderComposite, err := composites.NewOrderComposite(pgComposite)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	sc.Subscribe("receive-data", func(msg *stan.Msg) {
-
-		fmt.Println(msg.Data)
+	sc, _ := stan.Connect(cfg.Stan.ClusterId, cfg.Stan.ClientId)
+	sc.Subscribe("pub-1", func(msg *stan.Msg) {
+		// TODO
+		// 1. unmarshal to struct
+		// 2. validate struct
+		// 3. Store to repo & cache
+		fmt.Println(string(msg.Data))
 	})
 
 	r := chi.NewRouter()
+	orderComposite.Handler.Register(r)
 
-	http.ListenAndServe(":8080", r)
-}
-
-func RegisterOrder(r *chi.Mux) {
-	r.Route("/", func(r chi.Router) {
-		r.Get("/{id}", func(w http.ResponseWriter, r *http.Request) {
-
-		})
-		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-
-		})
-	})
+	http.ListenAndServe(fmt.Sprintf("%s:%s", cfg.Listen.Host, cfg.Listen.Port), r)
 }

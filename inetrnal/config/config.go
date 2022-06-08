@@ -22,6 +22,11 @@ type Config struct {
 		Host string `mapstructure:"host"`
 		Port string `mapstructure:"port"`
 	} `mapstructure:"listen"`
+	Stan struct {
+		ReceiveChan string ``
+		ClusterId   string `mapstructure:"cluster_id"`
+		ClientId    string `mapstructure:"client_id"`
+	} `mapstructure:"stan"`
 }
 
 var instance *Config
